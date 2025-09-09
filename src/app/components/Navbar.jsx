@@ -38,6 +38,23 @@ export default function Navbar() {
               </NavigationMenuContent>
             </NavigationMenuItem>
 
+
+ <NavigationMenuItem>
+              <NavigationMenuTrigger>Profile</NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <NavigationMenuLink asChild>
+                  <Link className="text-xs" href="/myProfile">
+                    My Profile
+                  </Link>
+                </NavigationMenuLink>
+
+                <NavigationMenuLink asChild>
+                  <Link className="text-xs" href="/dashboard">
+                    Dashboard
+                  </Link>
+                </NavigationMenuLink>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
             {/* About Us */}
 
             <NavigationMenuItem>
@@ -55,14 +72,6 @@ export default function Navbar() {
                   </Link>
                 </NavigationMenuLink>
               </NavigationMenuContent>
-            </NavigationMenuItem>
-{/* dashboard */}
-            <NavigationMenuItem>
-            <NavigationMenuLink asChild>
-
-                 <Link href="/dashboard">Dashboard</Link>
-              </NavigationMenuLink>
-           
             </NavigationMenuItem>
 
             <NavigationMenuItem>

@@ -11,78 +11,143 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
 
+import {
+  DropdownMenu,
+  DropdownMenuGroup,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuPortal,
+  DropdownMenuSubContent,
+} from "@/components/ui/dropdown-menu";
+
 export default function Navbar() {
   return (
     <header className="w-full border-b bg-rose-300 p-4">
-      <div className="container mx-auto flex items-center justify-between">
+      <div className="container mx-auto flex items-center justify-between ">
         {/* Logo */}
         <Link href="/" className="text-2xl font-bold">
           NextMobile
         </Link>
 
         {/* Navigation Menu */}
-        <NavigationMenu>
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              <NavigationMenuTrigger>Products</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <NavigationMenuLink asChild>
-                  <Link href="/products">All Products</Link>
-                </NavigationMenuLink>
-                <NavigationMenuLink asChild>
-                  <Link href="/smartphones">SmartPhones</Link>
-                </NavigationMenuLink>
-                <NavigationMenuLink asChild>
-                  <Link href="/accessories">Accessories</Link>
-                </NavigationMenuLink>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
+        <div className="hidden md:block">
+          <NavigationMenu viewport={false}>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger>Products</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <NavigationMenuLink asChild>
+                    <Link href="/products">All Products</Link>
+                  </NavigationMenuLink>
+                  <NavigationMenuLink asChild>
+                    <Link href="/smartphones">SmartPhones</Link>
+                  </NavigationMenuLink>
+                  <NavigationMenuLink asChild>
+                    <Link href="/accessories">Accessories</Link>
+                  </NavigationMenuLink>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+              {/* Profile Dropdown */}
 
+              <NavigationMenuItem>
+                <NavigationMenuTrigger>Profile</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid w-[200px] gap-4">
+                    <li>
+                      <NavigationMenuLink asChild>
+                        <Link href="/myProfile">My Profile</Link>
+                      </NavigationMenuLink>
+                      <NavigationMenuLink asChild>
+                        <Link href="/dashboard">Dashboard</Link>
+                      </NavigationMenuLink>
+                    </li>
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
 
- <NavigationMenuItem>
-              <NavigationMenuTrigger>Profile</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <NavigationMenuLink asChild>
-                  <Link className="text-xs" href="/myProfile">
-                    My Profile
-                  </Link>
-                </NavigationMenuLink>
+              {/* About Us */}
 
-                <NavigationMenuLink asChild>
-                  <Link className="text-xs" href="/dashboard">
-                    Dashboard
-                  </Link>
-                </NavigationMenuLink>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
-            {/* About Us */}
+              <NavigationMenuItem>
+                <NavigationMenuTrigger>About Us</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid w-[200px] gap-4">
+                    <li>
+                      <NavigationMenuLink asChild>
+                        <Link href="/about">Who we are</Link>
+                      </NavigationMenuLink>
+                      <NavigationMenuLink asChild>
+                        <Link href="/terms">
+                          Terms and Conditions
+                        </Link>
+                      </NavigationMenuLink>
+                    </li>
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
 
-            <NavigationMenuItem>
-              <NavigationMenuTrigger>About Us</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <NavigationMenuLink asChild>
-                  <Link className="text-xs" href="/about">
-                    Who are we
-                  </Link>
-                </NavigationMenuLink>
+{/* Login button */}
+ <NavigationMenu>
+                  <NavigationMenuLink asChild className="hover:bg-rose-400">
+                    <Button asChild="true" >
+                      <Link href="/login">Login</Link>
+                    </Button>
+                  </NavigationMenuLink>
+                </NavigationMenu>
 
-                <NavigationMenuLink asChild>
-                  <Link className="text-xs" href="/terms">
-                    Terms and Conditions
-                  </Link>
-                </NavigationMenuLink>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
+        {/* DropDown Manu */}
+        <div className="block md:hidden">
+          <DropdownMenu >
+            <DropdownMenuTrigger>
+              <Button variant="outline" className="hover:bg-rose-400 active:scale-95 transition">Open</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem>My Profile</DropdownMenuItem>
+                <DropdownMenuItem>Dashboard</DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuLabel>Products</DropdownMenuLabel>
+              <DropdownMenuSeparator />
 
-            <NavigationMenuItem>
-              <NavigationMenuLink asChild className="hover:bg-rose-400">
-                <Button asChild="true">
-                  <Link href="/contact">Login</Link>
-                </Button>
-              </NavigationMenuLink>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
+              <DropdownMenuGroup>
+                <DropdownMenuItem>All Products</DropdownMenuItem>
+                <DropdownMenuItem>Smartphones</DropdownMenuItem>
+                <DropdownMenuItem>Accessories</DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>About</DropdownMenuSubTrigger>
+                <DropdownMenuPortal>
+                  <DropdownMenuSubContent>
+                    <DropdownMenuItem>Who are we</DropdownMenuItem>
+                    <DropdownMenuItem>Message</DropdownMenuItem>
+                  </DropdownMenuSubContent>
+                </DropdownMenuPortal>
+              </DropdownMenuSub>
+              <DropdownMenuSeparator />
+
+              
+                <NavigationMenu>
+                  <NavigationMenuLink asChild>
+                    <Button asChild="true">
+                      <Link href="/login">Login</Link>
+                    </Button>
+                  </NavigationMenuLink>
+                </NavigationMenu>
+            
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </header>
   );

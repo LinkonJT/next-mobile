@@ -24,6 +24,7 @@ import {
   DropdownMenuPortal,
   DropdownMenuSubContent,
 } from "@/components/ui/dropdown-menu";
+import { Menu } from "lucide-react";
 
 export default function Navbar() {
   return (
@@ -63,7 +64,7 @@ export default function Navbar() {
                         <Link href="/myProfile">My Profile</Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
-                        <Link href="/dashboard">Dashboard</Link>
+                        <Link href="/features/dashboard">Dashboard</Link>
                       </NavigationMenuLink>
                     </li>
                   </ul>
@@ -93,7 +94,7 @@ export default function Navbar() {
 {/* Login button */}
  <NavigationMenu>
                   <NavigationMenuLink asChild className="hover:bg-rose-400">
-                    <Button asChild="true" >
+                    <Button asChild={true} >
                       <Link href="/login">Login</Link>
                     </Button>
                   </NavigationMenuLink>
@@ -106,14 +107,19 @@ export default function Navbar() {
         <div className="block md:hidden">
           <DropdownMenu >
             <DropdownMenuTrigger>
-              <Button variant="outline" className="hover:bg-rose-400 active:scale-95 transition">Open</Button>
+              {/* <Button variant="outline" className="hover:bg-rose-400 active:scale-95 transition">Open</Button> */}
+              <div className="flex items-center justify-center p-2 rounded-lg cursor-pointer hover:bg-rose-400 active:scale-95 focus:outline-none focus:ring-2 focus:ring-rose-400"><Menu className="size-6" /></div>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuItem>My Profile</DropdownMenuItem>
-                <DropdownMenuItem>Dashboard</DropdownMenuItem>
+                <DropdownMenuItem>
+                  <NavigationMenu><NavigationMenuLink asChild>
+  <Link href="/features/dashboard">Dashboard</Link>
+</NavigationMenuLink></NavigationMenu>
+</DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuLabel>Products</DropdownMenuLabel>
@@ -139,7 +145,7 @@ export default function Navbar() {
               
                 <NavigationMenu>
                   <NavigationMenuLink asChild>
-                    <Button asChild="true">
+                    <Button asChild={true}>
                       <Link href="/login">Login</Link>
                     </Button>
                   </NavigationMenuLink>

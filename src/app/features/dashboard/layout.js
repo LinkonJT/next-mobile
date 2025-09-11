@@ -16,6 +16,9 @@ export default function DashboardLayout({ children }) {
           {/* other header stuff */}
         </header>
         <main className="p-4">
+          <div className="bg-rose-300 rounded-2xl">
+ <h1 className="text-center">Dashboard</h1>
+          </div>
       
           {children}
         </main>

@@ -11,6 +11,7 @@ const client = new MongoClient(uri, {
   }
 })
 
+
 export default async function dbConnect(collectionName){
 // Check if the client is already connected to the database
   if(!client.topology?.isConnected()){

@@ -23,6 +23,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import toast from "react-hot-toast";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 
 // Zod schema validation for form fields
 const formSchema = z.object({
@@ -59,27 +62,82 @@ const formSchema = z.object({
     .enum(["Case", "Charger", "Earphones", "Screen Protector", "Stand"])
     .optional(),
 });
-// Handle form submission
-const onSubmit = (data) => {
-  console.log("Form submitted:", data);
-};
+// // Handle form submission
+// const onSubmit = (data) => {
+//   console.log("Form submitted:", data);
+// };
 
 export default function AddProduct() {
+    // const queryClient = useQueryClient();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
       description: "",
+      photoURL: "",
       category: "smartphone", // Default category to "smartphone"
       price: 0,
       brand: undefined,
       model: "",
-      storage: "64GB",
-      os: "Android",
-      color: "Black",
-      type: "Case", // For accessories, set a default type
+      storage: undefined,
+      os: undefined,
+      color: undefined,
+      type: undefined, // For accessories, set a default type
     },
   });
+
+// const onSubmit = async (data) => {
+//   try {
+//     const res = await fetch("/api/products", {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify(data),
+//     })
+
+//     const result = await res.json()
+
+//     if (!res.ok) throw new Error(result.message || "Failed to save")
+
+//     console.log("✅ Saved!", result)
+//     // Optionally reset or show a success toast
+//     toast.success("NewProduct data added to MongoDB")
+//     form.reset()
+//   } catch (err) {
+//     console.error("Error saving product:", err)
+//     // show an error toast if you want
+//   }
+// }
+
+
+const mutation = useMutation({
+  mutationFn: async (data)=>{
+    const productData = {
+      ...data,
+      createdAt: new Date().toISOString(),
+    };
+
+    const res = await axios.post('/api/products', productData);
+    console.log(res.data);
+    return res.data
+  },
+  onSuccess: ()=>{
+     toast.success("✅ Product posted to DB");
+    // refresh any lists that show products
+    // queryClient.invalidateQueries({ queryKey: ["products"] });
+    // reset your form if needed
+    form.reset();
+  },
+  onError: (error)=>{
+const errorMessage = error.res?.data?.message || error.message || "Failed to add Product";
+        toast.error(`Error adding product: ${errorMessage}`);
+        // toast.error(`Error adding car: ${error.message}`); //or just use this simpler version
+        console.error(error); // Keep for debugging
+  }
+})
+
+const onSubmit = (data)=>{
+  mutation.mutate(data)  // Trigger the mutation with the form data
+}
 
   return (
     <Form {...form}>
@@ -107,7 +165,7 @@ export default function AddProduct() {
             <FormItem>
               <FormLabel>Photo</FormLabel>
               <FormControl>
-                <Input placeholder="Enter product Photo URL" {...field} />
+                <Input placeholder="Enter product Photo URL" {...field} value={field.value ?? ""}  />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -147,7 +205,7 @@ export default function AddProduct() {
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Input placeholder="Enter product description" {...field} />
+                <Input placeholder="Enter product description" {...field} value={field.value ?? ""} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -165,7 +223,7 @@ export default function AddProduct() {
                 <Input
                   type="number"
                   placeholder="Enter product price"
-                  {...field}
+                  {...field} value={field.value ?? ""} 
                 />
               </FormControl>
               <FormMessage />
@@ -183,7 +241,7 @@ export default function AddProduct() {
                 <FormItem>
                   <FormLabel>Brand</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <SelectTrigger className="w-[180px]">
                         <SelectValue placeholder="Select a Brand" />
                       </SelectTrigger>
@@ -207,7 +265,7 @@ export default function AddProduct() {
                 <FormItem>
                   <FormLabel>Model</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter smartphone model" {...field} />
+                    <Input placeholder="Enter smartphone model" {...field} value={field.value ?? ""} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -220,7 +278,7 @@ export default function AddProduct() {
                 <FormItem>
                   <FormLabel>Storage</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <SelectTrigger className="w-[180px]">
                         <SelectValue placeholder="Select Storage Size" />
                       </SelectTrigger>
@@ -245,7 +303,7 @@ export default function AddProduct() {
                 <FormItem>
                   <FormLabel>Color</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <SelectTrigger className="w-[180px]">
                         <SelectValue placeholder="Select Color" />
                       </SelectTrigger>
@@ -278,7 +336,7 @@ export default function AddProduct() {
               <FormItem>
                 <FormLabel>Type</FormLabel>
                 <FormControl>
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <SelectTrigger className="w-[180px]">
                       <SelectValue placeholder="Select Accessory Type" />
                     </SelectTrigger>
@@ -300,7 +358,9 @@ export default function AddProduct() {
         )}
 
         {/* Submit Button */}
-        <Button type="submit">Add Product</Button>
+       <Button type="submit" disabled={mutation.isPending}>
+  {mutation.isPending ? "Saving..." : "Add Product"}
+</Button>
       </form>
     </Form>
   );

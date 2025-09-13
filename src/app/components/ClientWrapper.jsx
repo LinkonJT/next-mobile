@@ -1,6 +1,5 @@
 "use client";  // Ensures that this component is rendered on the client side
 
-
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import React from 'react'
 

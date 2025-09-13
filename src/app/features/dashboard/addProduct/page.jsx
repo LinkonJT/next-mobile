@@ -128,7 +128,7 @@ const mutation = useMutation({
     form.reset();
   },
   onError: (error)=>{
-const errorMessage = error.res?.data?.message || error.message || "Failed to add Product";
+const errorMessage = error.response?.data?.message || error.message || "Failed to add Product";
         toast.error(`Error adding product: ${errorMessage}`);
         // toast.error(`Error adding car: ${error.message}`); //or just use this simpler version
         console.error(error); // Keep for debugging
@@ -150,7 +150,7 @@ const onSubmit = (data)=>{
             <FormItem>
               <FormLabel>Title</FormLabel>
               <FormControl>
-                <Input placeholder="Enter product title" {...field} />
+                <Input placeholder="Enter product title" {...field} value={field.value ?? ""} />
               </FormControl>
               <FormMessage />
             </FormItem>

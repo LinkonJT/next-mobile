@@ -67,7 +67,7 @@ const formSchema = z.object({
 //   console.log("Form submitted:", data);
 // };
 
-export default function AddProduct() {
+export default function AddProductForm() {
     // const queryClient = useQueryClient();
   const form = useForm({
     resolver: zodResolver(formSchema),

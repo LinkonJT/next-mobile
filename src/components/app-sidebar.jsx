@@ -29,7 +29,7 @@ const data = {
         },
         {
           title: "Dashboard Home",
-          url: "/features/dashboard/dashboardHome",
+          url: "/dashboard/dashboardHome",
         },
         {
           title: "My Profile",
@@ -43,7 +43,7 @@ const data = {
       items: [
            {
           title: "Add Products",
-          url: "/features/dashboard/addProduct",
+          url: "/dashboard/add-product",
         },
         {
           title: "Manage Posts",

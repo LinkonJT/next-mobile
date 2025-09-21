@@ -23,8 +23,8 @@ export async function POST(request) {
 
 export async function GET() {
   try {
-    const collection = await dbConnect("products");
-    const products = await collection.find({}).toArray();
+    const productsCollection = await dbConnect("products");
+    const products = await productsCollection.find({}).toArray();
     return NextResponse.json(products);
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

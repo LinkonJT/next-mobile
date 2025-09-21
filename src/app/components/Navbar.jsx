@@ -64,7 +64,7 @@ export default function Navbar() {
                         <Link href="/myProfile">My Profile</Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
-                        <Link href="/features/dashboard">Dashboard</Link>
+                        <Link href="/dashboard">Dashboard</Link>
                       </NavigationMenuLink>
                     </li>
                   </ul>
@@ -117,7 +117,7 @@ export default function Navbar() {
                 <DropdownMenuItem>My Profile</DropdownMenuItem>
                 <DropdownMenuItem>
                   <NavigationMenu><NavigationMenuLink asChild>
-  <Link href="/features/dashboard">Dashboard</Link>
+  <Link href="/dashboard">Dashboard</Link>
 </NavigationMenuLink></NavigationMenu>
 </DropdownMenuItem>
               </DropdownMenuGroup>

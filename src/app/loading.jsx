@@ -1,0 +1,10 @@
+
+
+
+export default function Loading() {
+  return (
+    <div className="flex items-center justify-center h-screen">
+      <span className="loading loading-dots loading-xl text-amber-400"></span>
+    </div>
+  );
+}

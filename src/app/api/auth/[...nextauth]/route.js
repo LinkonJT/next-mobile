@@ -5,6 +5,7 @@ import GithubProvider from "next-auth/providers/github";  // Importing GitHub au
 import GoogleProvider from "next-auth/providers/google";  // Importing Google authentication provider from NextAuth
 
 import CredentialsProvider from "next-auth/providers/credentials"
+import { signIn } from "next-auth/react";
 
 // import toast from "react-hot-toast";  // Importing toast for displaying error messages (though not used actively here)
 
@@ -25,18 +26,19 @@ export const authOptions = {
     CredentialsProvider({  // Configuring Credentials-based authentication (for email/password)
       name: "Credentials",  // This is the name shown on the login page (e.g., "Sign in with Credentials")
       credentials: {  // Defining the fields for login (username and password)
-        username: { label: "Username", type: "text", placeholder: "jsmith" },  // Username field
+        // username: { label: "Username", type: "text", placeholder: "jsmith" },  // Username field
+        email: { label: "Email", type: "email"},  // Username field
         password: { label: "Password", type: "password" },  // Password field
       },
 
       async authorize(credentials) {  // The function to authenticate the user with credentials (username/password)
-        const { name, password } = credentials;  // Extract username and password from submitted credentials
+        const { email, password } = credentials;  // Extract username and password from submitted credentials
         const usersCollection = await dbConnect("users");  // Connect to the "users" collection in MongoDB
-        const user = await usersCollection.findOne({ username });  // Search for a user by username in the database
+        const user = await usersCollection.findOne({ email });  // Search for a user by username in the database
 
         if (!user) {  // If no user is found with that username
           // toast.error("No user Found with that email")  // Optional: Display an error toast (not used here)
-          throw new Error("No user found with that username");  // Throw an error
+          throw new Error("No user found with that email");  // Throw an error
         }
 const isValid = await bcrypt.compare(password, user.password);
      if (!isValid) {
@@ -47,7 +49,9 @@ const isValid = await bcrypt.compare(password, user.password);
         return {
           id: user._id.toString(),  // User's unique ID from the database
           name: user.username,  // User's name
-          email: user.email,  // User's email
+          email: user.email, // User's email
+          role: user.role,
+          photoURL: user.photoURL,  
         };
       },
     }),
@@ -60,11 +64,62 @@ const isValid = await bcrypt.compare(password, user.password);
   },
 
   callbacks: {
+
+    // just for google login
+    // async signIn({ user, account, profile }) {
+    //   if (account.provider === 'google') {
+    //     const usersCollection = await dbConnect("users");
+
+    //     const existingUser = await usersCollection.findOne({ email: user.email });
+
+    //     if (!existingUser) {
+    //       const newUser = {
+    //         username: user.name,
+    //         email: user.email,
+    //         photoURL: profile.picture,
+    //         role: "customer",  // You can change this based on your requirements
+    //         createdAt: new Date().toISOString(),
+    //       };
+
+    //       await usersCollection.insertOne(newUser); // Insert user if not already existing
+    //     }
+    //   }
+    //   return true;
+    // },
+
+    /** For GOOGLE and GITHUB together */
+async signIn({ user, account, profile }) {
+    const { email, name, image } = user;  // Extract user data
+    const usersCollection = await dbConnect("users");
+
+    // Check if the provider is either Google or GitHub
+    if (account.provider === 'google' || account.provider === 'github') {
+      const existingUser = await usersCollection.findOne({ email });
+
+      if (!existingUser) {
+        const newUser = {
+          username: name,  // Use the name field from the profile (same for both providers)
+          email,
+          photoURL: image || profile?.picture,  // Use profile picture from either Google or GitHub
+          role: "customer",  // Default role, modify if needed
+          createdAt: new Date().toISOString(),
+        };
+
+        // Insert the new user into MongoDB if not already existing
+        await usersCollection.insertOne(newUser);
+      }
+    }
+
+    return true;
+  },
+
+
     // JWT callback: This is triggered whenever a new JWT is created or updated
     async jwt({ token, user }) {
       if (user) {  // If a user object is returned (from successful authentication)
         token.id = user.id;  // Add the user ID to the JWT token
         token.role = user.role;  // Add the user's role to the JWT token (if defined)
+         token.photoURL = user.photoURL;
       }
       return token;  // Return the modified JWT token
     },
@@ -73,13 +128,14 @@ const isValid = await bcrypt.compare(password, user.password);
     async session({ session, token }) {
       session.user.id = token.id;  // Set the user ID in the session object
       session.user.role = token.role;  // Set the user role in the session object (if defined)
+      session.user.photoURL= token.photoURL
       return session;  // Return the modified session object
     },
   },
 
   pages: {
-    signIn: "/auth/signin",  // Custom sign-in page URL for your app (login page)
-    signOut: "/auth/signout",  // Custom sign-out page URL (if needed)
+    signIn: "/login",  // Custom sign-in page URL for your app (login page)
+   // Custom sign-out page URL (if needed)
   },
 };
 

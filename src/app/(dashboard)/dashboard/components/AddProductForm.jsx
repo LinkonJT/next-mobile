@@ -113,7 +113,7 @@ const mutation = useMutation({
   mutationFn: async (data)=>{
     const productData = {
       ...data,
-      createdAt: new Date().toISOString(),
+      // createdAt: new Date().toISOString(),
     };
 
     const res = await axios.post('/api/products', productData);

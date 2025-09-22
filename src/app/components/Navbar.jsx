@@ -25,8 +25,18 @@ import {
   DropdownMenuSubContent,
 } from "@/components/ui/dropdown-menu";
 import { Menu } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
+import { useEffect } from "react";
 
 export default function Navbar() {
+  const { data: session, status } = useSession();
+
+  const handleLogout = () => {
+    signOut({ callbackUrl: "/login" });
+  };
+
+
+   
   return (
     <header className="w-full border-b bg-rose-300 p-4">
       <div className="container mx-auto flex items-center justify-between ">
@@ -82,33 +92,38 @@ export default function Navbar() {
                         <Link href="/about">Who we are</Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
-                        <Link href="/terms">
-                          Terms and Conditions
-                        </Link>
+                        <Link href="/terms">Terms and Conditions</Link>
                       </NavigationMenuLink>
                     </li>
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
 
-{/* Login button */}
- <NavigationMenu>
-                  <NavigationMenuLink asChild className="hover:bg-rose-400">
-                    <Button asChild={true} >
-                      <Link href="/login">Login</Link>
-                    </Button>
-                  </NavigationMenuLink>
-                </NavigationMenu>
-
+                {/* Conditional Login/SignOut Button */}
+             <div>
+        {status === "loading" ? (
+          <Button disabled>Loading...</Button> // Show loading button or any placeholder during session loading
+        ) : session ? (
+          // Show "Sign Out" if the user is logged in
+          <Button onClick={handleLogout}>Sign Out</Button>
+        ) : (
+          // Show "Log In" if the user is not logged in
+          <Link href="/login">
+            <Button>Log In</Button>
+          </Link>
+        )}
+      </div>
             </NavigationMenuList>
           </NavigationMenu>
         </div>
         {/* DropDown Manu */}
         <div className="block md:hidden">
-          <DropdownMenu >
+          <DropdownMenu>
             <DropdownMenuTrigger>
               {/* <Button variant="outline" className="hover:bg-rose-400 active:scale-95 transition">Open</Button> */}
-              <div className="flex items-center justify-center p-2 rounded-lg cursor-pointer hover:bg-rose-400 active:scale-95 focus:outline-none focus:ring-2 focus:ring-rose-400"><Menu className="size-6" /></div>
+              <div className="flex items-center justify-center p-2 rounded-lg cursor-pointer hover:bg-rose-400 active:scale-95 focus:outline-none focus:ring-2 focus:ring-rose-400">
+                <Menu className="size-6" />
+              </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
@@ -116,10 +131,12 @@ export default function Navbar() {
               <DropdownMenuGroup>
                 <DropdownMenuItem>My Profile</DropdownMenuItem>
                 <DropdownMenuItem>
-                  <NavigationMenu><NavigationMenuLink asChild>
-  <Link href="/dashboard">Dashboard</Link>
-</NavigationMenuLink></NavigationMenu>
-</DropdownMenuItem>
+                  <NavigationMenu>
+                    <NavigationMenuLink asChild>
+                      <Link href="/dashboard">Dashboard</Link>
+                    </NavigationMenuLink>
+                  </NavigationMenu>
+                </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuLabel>Products</DropdownMenuLabel>
@@ -142,15 +159,32 @@ export default function Navbar() {
               </DropdownMenuSub>
               <DropdownMenuSeparator />
 
-              
-                <NavigationMenu>
-                  <NavigationMenuLink asChild>
-                    <Button asChild={true}>
-                      <Link href="/login">Login</Link>
-                    </Button>
-                  </NavigationMenuLink>
-                </NavigationMenu>
-            
+               {/* {status === "authenticated" ? (
+                <DropdownMenuItem>
+                  <Button onClick={handleLogout}>Sign Out</Button>
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem>
+                  <Link href="/login">
+                    <Button>Login</Button>
+                  </Link>
+                </DropdownMenuItem>
+              )} */}
+
+                    <div>
+      {status === "loading" ? (
+          <Button disabled>Loading...</Button> // Show loading button or any placeholder during session loading
+        ) : session ? (
+          // Show "Sign Out" if the user is logged in
+          <Button onClick={handleLogout}>Sign Out</Button>
+        ) : (
+          // Show "Log In" if the user is not logged in
+          <Link href="/login">
+            <Button>Log In</Button>
+          </Link>
+        )}
+      </div>
+        
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

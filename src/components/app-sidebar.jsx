@@ -14,6 +14,7 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
 import Link from "next/link"
+import { signOut, useSession } from "next-auth/react"
 
 
 // This is sample data.
@@ -33,7 +34,7 @@ const data = {
         },
         {
           title: "My Profile",
-          url: "#",
+          url: "/dashboard/my-profile",
         },
       ],
     },
@@ -46,18 +47,18 @@ const data = {
           url: "/dashboard/add-product",
         },
         {
-          title: "Manage Posts",
+          title: "Manage Products",
           url: "#",
         },
         {
           title: "Manage Users",
-          url: "#",
+          url: "/dashboard/manage-users",
           isActive: true,
         },
      
         {
           title: "Manage Orders",
-          url: "#",
+          url: "/dashboard/manage-orders",
         },
       ],
     },
@@ -67,22 +68,22 @@ const data = {
       items: [
         {
           title: "Assigned Orders",
-          url: "#",
+          url: "/dashboard/assigned-orders",
         },
         {
           title: "Orders Delivered",
-          url: "#",
+          url: "/dashboard/orders-delivered",
         },
         
       ],
     },
     {
-      title: "User/client",
+      title: "User",
       url: "#",
       items: [
         {
           title: "My Orders",
-          url: "#",
+          url: "/dashboard/orders-delivered",
         },
         {
           title: "Delivery Update",
@@ -97,8 +98,9 @@ const data = {
       items: [
         {
           title: "Log Out",
-          url: "/logout", // The link to log out
-        },
+          url: "#",
+           onClick: () => {signOut({ callbackUrl: "/login" })}, // Sign out and redirect to the login page, // The link to log out
+        }
       ],
     },
    
@@ -106,6 +108,10 @@ const data = {
 }
 
 export function AppSidebar({ ...props }) {
+
+  const { data: session } = useSession()  // Get session data
+  const role = session?.user?.role  // Access the role from the session
+
   return (
     <Sidebar variant="floating" {...props}>
       <SidebarHeader>
@@ -125,29 +131,45 @@ export function AppSidebar({ ...props }) {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
+
+
+
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu className="gap-2">
-            {data.navMain.map((item) => (
-              <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild>
-                  <Link href={item.url} className="font-medium">
-                    {item.title}
-                  </Link>
-                </SidebarMenuButton>
-                {item.items?.length ? (
-                  <SidebarMenuSub className="ml-0 border-l-0 px-1.5">
-                    {item.items.map((item) => (
-                      <SidebarMenuSubItem key={item.title}>
-                        <SidebarMenuSubButton asChild isActive={item.isActive}>
-                          <Link href={item.url}>{item.title}</Link>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-                    ))}
-                  </SidebarMenuSub>
-                ) : null}
-              </SidebarMenuItem>
-            ))}
+
+
+       {/* Loop over the nav data */}
+            {data.navMain.map((item) => {
+              // Conditionally render Admin, Agent, and User sections based on the user's role
+              // if (item.title === "Admin" && role !== "admin") return null
+              // if (item.title === "Agent" && role !== "agent") return null
+              // if (item.title === "User/client" && role !== "customer") return null
+
+              return (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <Link href={item.url} className="font-medium">
+                      {item.title}
+                    </Link>
+                  </SidebarMenuButton>
+
+                  {/* Render sub-items if available */}
+                  {item.items?.length ? (
+                    <SidebarMenuSub className="ml-0 border-l-0 px-1.5">
+                      {item.items.map((subItem) => (
+                        <SidebarMenuSubItem key={subItem.title}>
+                          <SidebarMenuSubButton asChild isActive={subItem.isActive}>
+                            <Link href={subItem.url}>{subItem.title}</Link>
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      ))}
+                    </SidebarMenuSub>
+                  ) : null}
+                </SidebarMenuItem>
+              )
+            })}
+
           </SidebarMenu>
         </SidebarGroup>
    

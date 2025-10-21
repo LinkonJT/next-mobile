@@ -26,7 +26,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Menu } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
-import { useEffect } from "react";
 
 export default function Navbar() {
   const { data: session, status } = useSession();
@@ -42,12 +41,12 @@ export default function Navbar() {
       <div className="container mx-auto flex items-center justify-between ">
         {/* Logo */}
         <Link href="/" className="text-2xl font-bold">
-          NextMobile
+        <span className="text-amber-300">Next</span>Mobile
         </Link>
 
         {/* Navigation Menu */}
         <div className="hidden md:block">
-          <NavigationMenu viewport={false}>
+          <NavigationMenu viewport={false} className="z-50">
             <NavigationMenuList>
               <NavigationMenuItem>
                 <NavigationMenuTrigger>Products</NavigationMenuTrigger>
@@ -105,7 +104,10 @@ export default function Navbar() {
           <Button disabled>Loading...</Button> // Show loading button or any placeholder during session loading
         ) : session ? (
           // Show "Sign Out" if the user is logged in
-          <Button onClick={handleLogout}>Sign Out</Button>
+          <div className="flex items-center gap-4">
+                    <span className="text-lg bg-rose-400 p-1 rounded-md">{session.user.name}</span>
+                    <Button onClick={handleLogout}>Sign Out</Button>
+                  </div>
         ) : (
           // Show "Log In" if the user is not logged in
           <Link href="/login">
@@ -143,7 +145,7 @@ export default function Navbar() {
               <DropdownMenuSeparator />
 
               <DropdownMenuGroup>
-                <DropdownMenuItem>All Products</DropdownMenuItem>
+                <DropdownMenuItem><Link href="/products">All Products</Link></DropdownMenuItem>
                 <DropdownMenuItem>Smartphones</DropdownMenuItem>
                 <DropdownMenuItem>Accessories</DropdownMenuItem>
               </DropdownMenuGroup>
@@ -176,7 +178,12 @@ export default function Navbar() {
           <Button disabled>Loading...</Button> // Show loading button or any placeholder during session loading
         ) : session ? (
           // Show "Sign Out" if the user is logged in
-          <Button onClick={handleLogout}>Sign Out</Button>
+          
+         <div className="flex items-center gap-4">
+                    <span className="text-lg">{session.user.name}</span>
+                    <Button onClick={handleLogout}>Sign Out</Button>
+                  </div>
+          
         ) : (
           // Show "Log In" if the user is not logged in
           <Link href="/login">

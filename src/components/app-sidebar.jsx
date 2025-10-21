@@ -48,7 +48,8 @@ const data = {
         },
         {
           title: "Manage Products",
-          url: "#",
+          url: "/dashboard/manage-products",
+          
         },
         {
           title: "Manage Users",

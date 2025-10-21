@@ -4,9 +4,12 @@ import HeroSection from "./components/banner/HeroSection";
 
 export default function Home() {
   return (
-    <div>
+   <div>
+
+     <div>
       {/* <Navbar></Navbar> */}
-      {/* <HeroSection></HeroSection> */}
+      <HeroSection></HeroSection>
     </div>
+   </div>
   );
 }

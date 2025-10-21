@@ -32,8 +32,7 @@ export default function RootLayout({ children }) {
         <SessionWrapper>
           <ClientWrapper>
 <Navbar></Navbar>
-<HeroSection></HeroSection>
-            <main className="max-w-11/12 mx-auto">{children}</main>
+            <main>{children}</main>
          
             <Toaster />
           </ClientWrapper>

@@ -3,6 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios'
 import React from 'react'
+import { motion } from 'motion/react';
 
 
 const fetchProducts = async ()=>{
@@ -25,9 +26,22 @@ export default function ProductsPage() {
     if (error) return <p>Error fetching....</p>
 
   return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div>
+<motion.h1
+  initial={{ y: -80, opacity: 0 }}
+  animate={{ y: 0, opacity: 1 }}
+  transition={{
+    type: "spring",
+    stiffness: 120,
+    damping: 10,
+  }}
+  className="text-center text-xl md:text-3xl my-2 font-bold"
+>
+  Explore our products
+</motion.h1>
+        <div className="max-w-11/12 mx-auto grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
 
-        <h1>Welcome to NextMobile All products</h1>
+        
       {/* Loop through each product in the 'products' array and create a card for each */}
       {data.map((product) => (
         <div key={product._id} className="border p-4 rounded-md shadow-md">
@@ -68,5 +82,7 @@ export default function ProductsPage() {
         </div>
       ))}
     </div>
+    </div>
+    
   )
 }
